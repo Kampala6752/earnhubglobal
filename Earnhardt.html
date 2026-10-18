@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EarnHub Global — Complete Tasks, Earn Real Rewards</title>
+<meta name="description" content="EarnHub Global is a trusted online micro-task platform. Complete short digital tasks and earn rewards. Join over 50,000 members worldwide.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--navy:#0B1F3A;--navy2:#12294a;--gold:#D4AF37;--gold2:#f0d264;--bg:#f4f6fb;--card:#ffffff;--txt:#1c2b45;--muted:#6b7a99;--green:#1e9e5a;--red:#d64545}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--txt)}
+button{cursor:pointer;font-family:inherit}
+.hidden{display:none!important}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+/* NAV */
+nav{background:var(--navy);padding:14px 0;position:sticky;top:0;z-index:50}
+.nav-inner{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:20px}
+.logo-mark{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--gold),#a8842a);display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:20px;font-weight:800}
+.nav-links{display:flex;gap:22px;color:#cdd8ee;font-size:14px}
+.nav-links a{color:inherit;text-decoration:none;opacity:.85}
+.nav-links a:hover{opacity:1;color:var(--gold2)}
+.btn{border:none;border-radius:8px;padding:11px 22px;font-weight:700;font-size:14px;transition:.2s}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#b8912b);color:var(--navy)}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(212,175,55,.35)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-outline{background:transparent;border:1.5px solid #cfd8ea;color:var(--txt)}
+.btn-lg{padding:15px 30px;font-size:16px}
+/* HERO */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 60%,#1a3a66 100%);color:#fff;padding:70px 0 90px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.25),transparent 70%)}
+.hero-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;position:relative;z-index:1}
+.hero h1{font-size:44px;line-height:1.15;font-weight:800}
+.hero h1 span{color:var(--gold2)}
+.hero p.sub{margin:18px 0 28px;font-size:17px;color:#c4d0e8;max-width:520px}
+.trust-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:34px}
+.trust-badge{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:9px 14px;border-radius:99px;font-size:13px;color:#dbe4f5}
+.live-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(30,158,90,.15);border:1px solid rgba(30,158,90,.4);color:#7fe3ae;padding:8px 16px;border-radius:99px;font-size:14px;font-weight:600;margin-bottom:20px}
+.dot{width:9px;height:9px;border-radius:50%;background:#2ecc71;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,113,.6)}70%{box-shadow:0 0 0 9px rgba(46,204,113,0)}100%{box-shadow:0 0 0 0 rgba(46,204,113,0)}}
+.hero-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:26px;backdrop-filter:blur(6px)}
+.hero-card h3{font-size:15px;color:#9fb2d4;font-weight:600;margin-bottom:14px}
+.stat-big{font-size:38px;font-weight:800;color:#fff}
+.stat-sub{font-size:13px;color:#9fb2d4;margin-top:4px}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.mini-stat{background:rgba(255,255,255,.06);border-radius:10px;padding:14px}
+.mini-stat b{display:block;font-size:20px;color:var(--gold2)}
+.mini-stat span{font-size:12px;color:#9fb2d4}
+/* SECTIONS */
+section.block{padding:64px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 40px}
+.sec-head h2{font-size:32px;font-weight:800;color:var(--navy)}
+.sec-head p{color:var(--muted);margin-top:10px;font-size:16px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step{background:var(--card);border-radius:14px;padding:26px;box-shadow:0 4px 18px rgba(11,31,58,.06);text-align:center}
+.step .num{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8912b);color:var(--navy);font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:18px}
+.step h4{font-size:16px;margin-bottom:8px;color:var(--navy)}
+.step p{font-size:13.5px;color:var(--muted)}
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.review{background:var(--card);border-radius:14px;padding:22px;box-shadow:0 4px 18px rgba(11,31,58,.06)}
+.stars{color:var(--gold);font-size:15px;letter-spacing:2px;margin-bottom:10px}
+.review p{font-size:14px;color:#3a4a6b;line-height:1.55}
+.rev-user{display:flex;align-items:center;gap:10px;margin-top:16px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.rev-user b{font-size:13.5px;display:block;color:var(--navy)}
+.rev-user span{font-size:12px;color:var(--muted)}
+.badges{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin-top:44px}
+.cert{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.seal{width:74px;height:74px;border-radius:50%;border:3px solid var(--gold);background:var(--navy);color:var(--gold2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;text-align:center;padding:6px}
+.cert span{font-size:12px;color:var(--muted);max-width:130px}
+/* TEAM */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.member{background:var(--card);border-radius:14px;padding:26px;text-align:center;box-shadow:0 4px 18px rgba(11,31,58,.06)}
+.member .avatar{width:64px;height:64px;margin:0 auto 14px;font-size:22px;background:linear-gradient(135deg,var(--navy),#274a7d)}
+.member b{display:block;color:var(--navy);font-size:16px}
+.member span{font-size:13px;color:var(--gold);font-weight:600}
+.member p{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5}
+/* FOOTER */
+footer{background:var(--navy);color:#aab8d4;padding:44px 0 24px;margin-top:40px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}
+footer h4{color:#fff;font-size:14px;margin-bottom:14px}
+footer a{display:block;color:#aab8d4;text-decoration:none;font-size:13.5px;margin-bottom:9px}
+footer a:hover{color:var(--gold2)}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:30px;padding-top:20px;font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+/* AUTH */
+.auth-wrap{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(160deg,#eef2fa,#f8f9fd)}
+.auth-card{background:#fff;border-radius:18px;box-shadow:0 14px 44px rgba(11,31,58,.12);padding:38px;width:100%;max-width:430px}
+.auth-card h2{color:var(--navy);font-size:24px;margin-bottom:6px}
+.auth-card .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.field input{width:100%;padding:13px 14px;border:1.5px solid #d7deec;border-radius:9px;font-size:14.5px;outline:none;transition:.2s}
+.field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.15)}
+.pw-hint{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.auth-alt{text-align:center;margin-top:18px;font-size:13.5px;color:var(--muted)}
+.auth-alt a{color:var(--navy);font-weight:700;text-decoration:none}
+.msg{font-size:13px;margin-top:12px;line-height:1.5}
+.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+.bonus-note{background:#fdf6df;border:1px solid #ecd98f;border-radius:10px;padding:12px 14px;font-size:13px;color:#7a5c00;margin-bottom:18px}
+/* DASHBOARD */
+.dash{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.side{background:var(--navy);color:#fff;padding:26px 18px}
+.side .logo{margin-bottom:30px}
+.side-link{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:9px;color:#b9c6de;font-size:14px;font-weight:600;margin-bottom:6px;cursor:pointer}
+.side-link.active,.side-link:hover{background:rgba(255,255,255,.09);color:#fff}
+.side-live{margin-top:26px;background:rgba(255,255,255,.06);border-radius:12px;padding:16px;font-size:12.5px;color:#9fb2d4}
+.side-live b{display:block;font-size:26px;color:#7fe3ae;margin-bottom:3px}
+.main{padding:28px 30px;overflow-y:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.topbar h1{font-size:22px;color:var(--navy)}
+.topbar .who{font-size:13px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.card{background:var(--card);border-radius:14px;padding:22px;box-shadow:0 4px 18px rgba(11,31,58,.06)}
+.card .lbl{font-size:12.5px;color:var(--muted);font-weight:600}
+.card .val{font-size:30px;font-weight:800;color:var(--navy);margin-top:6px}
+.card .val.gold{color:#a8842a}
+.card .hint{font-size:12px;color:var(--muted);margin-top:6px}
+.panel{background:var(--card);border-radius:14px;padding:24px;box-shadow:0 4px 18px rgba(11,31,58,.06);margin-bottom:22px}
+.panel h3{color:var(--navy);font-size:17px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.task{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 0;border-bottom:1px solid #edf0f7}
+.task:last-child{border-bottom:none}
+.task-info b{font-size:14.5px;color:var(--navy);display:block}
+.task-info span{font-size:12.5px;color:var(--muted)}
+.task-reward{font-size:14px;font-weight:800;color:var(--green);white-space:nowrap}
+.locked-tag{font-size:11px;background:#eef1f8;color:var(--muted);padding:3px 9px;border-radius:99px;font-weight:700}
+.tier-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tier{background:var(--card);border-radius:14px;padding:26px;box-shadow:0 4px 18px rgba(11,31,58,.06);border:2px solid transparent;position:relative}
+.tier.featured{border-color:var(--gold)}
+.tier .tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),#b8912b);color:var(--navy);font-size:11px;font-weight:800;padding:4px 14px;border-radius:99px}
+.tier h4{color:var(--navy);font-size:17px}
+.tier .price{font-size:30px;font-weight:800;color:var(--navy);margin:10px 0 2px}
+.tier .per{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.tier ul{list-style:none;margin-bottom:18px}
+.tier li{font-size:13px;color:#3a4a6b;padding:5px 0;display:flex;gap:8px;align-items:flex-start}
+.tier li::before{content:"✓";color:var(--gold);font-weight:800}
+.withdraw-lock{background:#fff7e6;border:1px solid #f0dfae;border-radius:12px;padding:18px;display:flex;gap:14px;align-items:center;margin-bottom:22px}
+.withdraw-lock .ic{font-size:26px}
+.withdraw-lock b{color:var(--navy);font-size:14.5px;display:block}
+.withdraw-lock span{font-size:12.5px;color:var(--muted)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:15px 22px;border-radius:12px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:200;animation:slidein .3s ease}
+@keyframes slidein{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+/* CHATBOT */
+.chat-fab{position:fixed;bottom:24px;right:24px;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8912b);border:none;font-size:24px;box-shadow:0 8px 24px rgba(212,175,55,.45);z-index:150}
+.chat-box{position:fixed;bottom:94px;right:24px;width:330px;background:#fff;border-radius:16px;box-shadow:0 18px 50px rgba(11,31,58,.25);z-index:150;overflow:hidden;display:flex;flex-direction:column}
+.chat-head{background:var(--navy);color:#fff;padding:15px 18px;font-weight:700;font-size:14.5px;display:flex;justify-content:space-between;align-items:center}
+.chat-body{height:280px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;background:#f7f9fd}
+.bubble{max-width:82%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.5}
+.bubble.bot{background:#fff;border:1px solid #e3e8f4;align-self:flex-start;color:#2c3b5c}
+.bubble.me{background:var(--navy);color:#fff;align-self:flex-end}
+.chat-input{display:flex;border-top:1px solid #e8ecf5}
+.chat-input input{flex:1;border:none;outline:none;padding:13px 14px;font-size:13.5px}
+.chat-input button{border:none;background:var(--gold);color:var(--navy);font-weight:800;padding:0 18px}
+@media(max-width:900px){.hero-grid,.steps,.reviews-grid,.team,.tier-cards,.cards,.foot-grid{grid-template-columns:1fr}.dash{grid-template-columns:1fr}.side{display:flex;flex-wrap:wrap;gap:10px}.side-live{margin-top:0;width:100%}.hero h1{font-size:32px}}
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<div id="landingView">
+<nav><div class="container nav-inner">
+  <div class="logo"><div class="logo-mark">E</div>EarnHub Global</div>
+  <div class="nav-links">
+    <a href="#how">How It Works</a><a href="#reviews">Reviews</a><a href="#about">About Us</a><a href="#contact">Contact</a>
+  </div>
+  <button class="btn btn-gold" onclick="showAuth('login')">Sign In</button>
+</div></nav>
+
+<section class="hero"><div class="container hero-grid">
+  <div>
+    <div class="live-pill"><span class="dot"></span><span id="liveCount">612</span> people online right now</div>
+    <h1>Complete Simple Tasks.<br><span>Earn Real Rewards.</span></h1>
+    <p class="sub">Join 50,000+ members worldwide who complete short daily tasks — watching videos, following pages, installing apps — and get paid instantly to their dashboard balance.</p>
+    <button class="btn btn-gold btn-lg" onclick="showAuth('signup')">Get Started Free — $10 Bonus</button>
+    <div class="trust-row">
+      <div class="trust-badge">🔒 SSL Secured</div>
+      <div class="trust-badge">⭐ 4.8/5 (12,400+ reviews)</div>
+      <div class="trust-badge">🇬🇧 UK Registered Ltd</div>
+    </div>
+  </div>
+  <div class="hero-card">
+    <h3>LIVE PLATFORM ACTIVITY</h3>
+    <div class="stat-big" id="tasksToday">18,437</div>
+    <div class="stat-sub">tasks completed today</div>
+    <div class="mini-stats">
+      <div class="mini-stat"><b>$231,904</b><span>payouts this month</span></div>
+      <div class="mini-stat"><b>50,214</b><span>active members</span></div>
+      <div class="mini-stat"><b>2 min</b><span>average task time</span></div>
+      <div class="mini-stat"><b>99.2%</b><span>task success rate</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="block" id="how"><div class="container">
+  <div class="sec-head"><h2>How It Works</h2><p>Four simple steps. No experience needed. Start earning in under 5 minutes.</p></div>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><h4>Create Account</h4><p>Sign up free with your email. A $10 welcome bonus is added instantly to your balance.</p></div>
+    <div class="step"><div class="num">2</div><h4>Pick a Task</h4><p>Choose from 6 free starter tasks — each takes about 2 minutes to complete.</p></div>
+    <div class="step"><div class="num">3</div><h4>Complete & Verify</h4><p>Follow the on-screen instructions. Your reward is credited immediately when you return.</p></div>
+    <div class="step"><div class="num">4</div><h4>Level Up & Withdraw</h4><p>Unlock higher-paying task packs with a membership plan and withdraw from $50.</p></div>
+  </div>
+</div></section>
+
+<section class="block" id="reviews" style="background:#eef1f8"><div class="container">
+  <div class="sec-head"><h2>What Our Members Say</h2><p>Real feedback from our global community of task earners.</p></div>
+  <div class="reviews-grid" id="reviewGrid"></div>
+  <div class="badges">
+    <div class="cert"><div class="seal">ISO<br>27001</div><span>Certified Information Security</span></div>
+    <div class="cert"><div class="seal">BBB<br>A+</div><span>Accredited Business Rating</span></div>
+    <div class="cert"><div class="seal">TRUSTED<br>50K+</div><span>Members Worldwide Since 2019</span></div>
+    <div class="cert"><div class="seal">PCI<br>DSS</div><span>Payment Card Compliance</span></div>
+  </div>
+</div></section>
+
+<section class="block" id="about"><div class="container">
+  <div class="sec-head"><h2>About EarnHub Global Ltd</h2><p>Registered in the United Kingdom (Company No. 11487293). We've been connecting people with simple, verifiable micro-tasks since 2019.</p></div>
+  <div class="team">
+    <div class="member"><div class="avatar">JD</div><b>James Doyle</b><span>Chief Executive Officer</span><p>Former fintech product lead with 12 years building reward platforms across Europe and North America.</p></div>
+    <div class="member"><div class="avatar">SM</div><b>Sarah Mitchell</b><span>Chief Technology Officer</span><p>Engineer specializing in secure payment infrastructure and real-time verification systems.</p></div>
+    <div class="member"><div class="avatar">AJ</div><b>Andrew Johnson</b><span>Head of Operations</span><p>Leads our 24/7 customer care team and quality assurance for every task listed on the platform.</p></div>
+  </div>
+</div></section>
+
+<footer id="contact"><div class="container">
+  <div class="foot-grid">
+    <div>
+      <div class="logo" style="margin-bottom:14px"><div class="logo-mark">E</div>EarnHub Global</div>
+      <p style="font-size:13px;line-height:1.6">EarnHub Global Ltd<br>14 Finsbury Avenue, London EC2M 2PF, United Kingdom<br>Company Reg. No. 11487293</p>
+    </div>
+    <div><h4>Platform</h4><a href="#how">How It Works</a><a href="#reviews">Reviews</a><a href="#" onclick="showAuth('signup');return false">Create Account</a></div>
+    <div><h4>Support</h4><a href="tel:+17426660496">📞 +1 (742) 666-0496</a><a href="mailto:earnhubglobal@proton.me">✉️ earnhubglobal@proton.me</a><a href="#">Live Chat (24/7)</a></div>
+    <div><h4>Legal</h4><a href="#" onclick="openDoc('terms');return false">Terms of Service</a><a href="#" onclick="openDoc('privacy');return false">Privacy Policy</a><a href="#" onclick="openDoc('refund');return false">Refund Policy</a></div>
+  </div>
+  <div class="foot-bottom"><span>© 2019–2025 EarnHub Global Ltd. All rights reserved.</span><span>Payments secured by Veem · SSL Encrypted</span></div>
+</div></footer>
+</div>
+
+<!-- ============ AUTH ============ -->
+<div id="authView" class="hidden">
+<div class="auth-wrap"><div class="auth-card">
+  <div class="logo" style="justify-content:center;margin-bottom:22px"><div class="logo-mark">E</div><span style="color:var(--navy)">EarnHub Global</span></div>
+  <div id="signupForm">
+    <h2>Create Your Account</h2>
+    <p class="sub">Instantly receive a <b style="color:#a8842a">$10 welcome bonus</b> after signing up.</p>
+    <div class="bonus-note">🎁 New member bonus: $10.00 will be added to your balance once your email is verified.</div>
+    <div class="field"><label>Email Address</label><input type="email" id="suEmail" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input type="password" id="suPass" placeholder="Create a strong password">
+      <div class="pw-hint">Must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number.</div></div>
+    <button class="btn btn-gold btn-lg" style="width:100%" onclick="doSignup()">Sign Up Free →</button>
+    <div class="auth-alt">Already have an account? <a href="#" onclick="toggleAuth();return false">Sign in</a></div>
+    <div id="suMsg" class="msg"></div>
+  </div>
+  <div id="loginForm" class="hidden">
+    <h2>Welcome Back</h2>
+    <
+p class="sub">Sign in to access your tasks and balance.</p>
+}
+function startTask(i){
+const t=FREE_TASKS[i];
+const w=window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank");
+setTimeout(()=>{
+if(!state.doneFree.includes(i)){state.doneFree.push(i);state.balance+=t.r;state.total+=t.r;save();
+renderFreeTasks();updateBalanceUI();
+document.getElementById("activityFeed").insertAdjacentHTML("afterbegin",`<div class="task"><div class="task-info"><b>${t.t} — completed</b><span>Just now · Verified</span></div><div class="task-reward">+${fmt(t.r)}</div></div>`);
+toast("✅ Task verified! "+fmt(t.r)+" added to your balance.");
+}
+},15000);
+toast("Task opened. Complete it (~2 min), then we'll verify automatically.");
+}
+
+function renderPlanTasks(){
+const box=document.getElementById("planTasks");const st=document.getElementById("planStatus");
+if(!state.plan){st.textContent="No active plan";st.style.background="#eef1f8";st.style.color="var(--muted)";
+box.innerHTML=`<p style="font-size:13.5px;color:var(--muted)">🔒 Subscribe to a plan above to unlock its exclusive task pack. Each plan includes 50 tasks with different reward levels.</p>`;return}
+st.textContent=state.plan+" Plan Active ✓";st.style.background="#e6f6ec";st.style.color="var(--green)";
+const tasks=PLAN_TASKS[state.plan];
+box.innerHTML=tasks.map((t,i)=>{const done=state.planDone.includes(i);
+return `<div class="task"><div class="task-info"><b>${t[0]}</b><span>${state.plan} tier · ~5–10 min</span></div>${done?`<span class="task-reward">✓ Paid</span>`:`<button class="btn btn-navy" onclick="startPlanTask('${state.plan}',${i})">Start Task</button>`}</div>`}).join("")
++`<p style="font-size:12px;color:var(--muted);margin-top:12px">Showing 6 of 50 tasks. Remaining tasks refresh daily while your plan is active.</p>`;
+}
+function startPlanTask(plan,i){
+const t=PLAN_TASKS[plan][i];const val=parseFloat(t[1].replace("$",""));
+setTimeout(()=>{if(!state.planDone.includes(i)){state.planDone.push(i);state.balance+=val;state.total+=val;save();renderPlanTasks();updateBalanceUI();toast("✅ Verified! "+t[1]+" added to your balance.")}},12000);
+toast("Task started. Complete the instructions, then we'll verify.");
+}
+
+/* ---------- PAYMENT ---------- */
+function payPlan(name,amt,dur){
+if(confirm(`Subscribe to the ${name} Plan?\n\n$${amt} for ${dur}\n50 exclusive tasks will be unlocked.\n\nYou'll be redirected to our secure Veem payment page.`)){
+window.open(VEEM_LINK,"_blank");
+setTimeout(()=>{
+state.plan=name;save();renderPlanTasks();
+toast("🎉 Payment received! Your "+name+" tasks are now unlocked. Check the Membership tab.");
+botSay("Congratulations! Your "+name+" plan is active. Head to Membership Plans to start your new tasks. If anything looks off, call +1 (742) 666-0496.");
+},8000);
+}
+}
+function requestWithdraw(){
+const amt=parseFloat(document.getElementById("wdAmt").value);
+if(isNaN(amt)||amt<50){toast("⚠️ Minimum withdrawal is $50.00.");return}
+if(amt>state.balance){toast("⚠️ Insufficient balance. Current: "+fmt(state.balance));return}
+state.balance-=amt;save();updateBalanceUI();
+toast("✅ Withdrawal of "+fmt(amt)+" submitted! Processing within 24 hours via Veem.");
+}
+
+/* ---------- LEGAL DOCS ---------- */
+function openDoc(type){
+const docs={
+terms:`<h2>Terms of Service</h2><p>EarnHub Global Ltd ("the Platform") provides micro-task services to registered members. By creating an account you agree to: complete tasks honestly; maintain accurate account details; understand that membership subscriptions renew only upon re-purchase; and that withdrawal requests below $50.00 may not be processed. Balances reflect verified task completions. The Platform may suspend accounts engaged in fraudulent activity. Governed by the laws of England & Wales.</p>`,
+privacy:`<h2>Privacy Policy</h2><p>We collect your email address, chosen password, and transaction history solely to operate your account. Data is stored on encrypted servers (GDPR compliant). We never sell personal data to third parties. Payment processing is handled securely by Veem. You may request deletion of your data by contacting earnhubglobal@proton.me.</p>`,
+refund:`<h2>Refund Policy</h2><p>Membership subscriptions include a 7-day money-back guarantee from the date of purchase, provided fewer than 10 tasks have been completed. After 7 days, plans are non-refundable as earned task rewards are considered services rendered. Contact support for all refund requests.`};
+alert(docs[type]);
+}
+
+/* ---------- CHATBOT ---------- */
+function toggleChat(){const b=document.getElementById("chatBox");b.classList.toggle("hidden")}
+function botSay(t){const b=document.getElementById("chatBody");b.insertAdjacentHTML("beforeend",`<div class="bubble bot">${t}</div>`);b.scrollTop=b.scrollHeight}
+function userSay(t){const b=document.getElementById("chatBody");b.insertAdjacentHTML("beforeend",`<div class="bubble me">${t}</div>`);b.scrollTop=b.scrollHeight}
+function greetBot(){botSay("Hi there! 👋 I'm Alex, your EarnHub assistant. Ask me about tasks, payments, withdrawals, or getting started.")}
+function sendChat(){
+const i=document.getElementById("chatIn"),q=i.value.trim().toLowerCase();if(!q)return;i.value="";userSay(q);
+setTimeout(()=>{
+let a="Great question! For detailed help, call +1 (742) 666-0496 or email earnhubglobal@proton.me — we're available 24/7.";
+if(/hi|hello|hey/.test(q))a="Hello! 😊 How can I help you today? You can ask me about tasks, plans, payments, or withdrawals.";
+else if(/task|free/.test(q))a="You have 6 free starter tasks available — each takes about 2 minutes and pays out instantly. Go to the Free Tasks tab to begin. Membership plans unlock 50 extra tasks each with higher rewards.";
+else if(/withdraw|payout|cash/.test(q))a="Withdrawals open once your balance reaches $50.00. After that, requests are processed within 24 hours via Veem. You can track it in the Withdrawals tab.";
+else if(/price|plan|subscri|cost|membership/.test(q))a="We offer three plans: Starter $25/3 months, Pro $50/6 months (most popular), and Elite $100/year. Higher tiers unlock higher-paying tasks. All include a 7-day money-back guarantee.";
+else if(/pay|veem|secure|safe|trust/.test(q))a="All payments are processed through Veem, a PCI-DSS compliant gateway, over an SSL-encrypted connection. Your card details never touch our servers.";
+else if(/bonus|sign ?up|register|start/.test(q))a="When you sign up you instantly receive a $10 welcome bonus after email verification. Then complete the 6 free tasks to grow your balance!";
+else if(/support|help|call|phone|contact/.test(q))a="Our 24/7 support line is +1 (742) 666-0496. You can also email earnhubglobal@proton.me and we'll respond within a few hours.";
+else if(/verify|email|confirm/.test(q))a="Check your inbox for the verification email — it usually arrives within a minute (check spam just in case). Once verified, your $10 bonus is activated.";
+botSay(a);
+},700);
+}
+</script>
+</body>
+</html>
+
